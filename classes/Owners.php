@@ -16,7 +16,7 @@ class Owner extends Config {
 
             $_SESSION['message'] = "Owner added successfully";
             
-            header("Location: owners.php");
+            header("Location: ownerLogin.php");
             
         } else{
             echo $this->conn->error;

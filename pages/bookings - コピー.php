@@ -1,9 +1,9 @@
 <?php
 session_start();
-require_once("../classes/Countries.php");
+require_once("../classes/Bookings.php");
 
-$countries = new Countries;
-
+$booking = new Booking;
+$user_id = $_SESSION['user_id'];
 ?>
 
 
@@ -50,10 +50,13 @@ $countries = new Countries;
 
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-					<li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-					<li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-					<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
+					<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+					<li class="nav-item"><a href="addUser.php" class="nav-link">Add User</a></li>
+					<li class="nav-item active"><a href="tour.html" class="nav-link">Tour</a></li>
+					<li class="nav-item"><a href="hotel.html" class="nav-link">Hotels</a></li>
+					<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+					<li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -80,36 +83,45 @@ $countries = new Countries;
 
 					<table class="table table-striped">
 						<thead>
-							<th>ID</th>
-							<th>CountriesName</th>
+							<th>Room Title</th>
+							<th>Total Price</th>
+							<th>Room Number of guests</th>
+							<th>StertDate</th>
+							<th>EndDate</th>					
+							<th>CityName</th>
 
 						</thead>
 
 					<tbody>
 
+						<?php
+							$result = $booking->getUserBooking($user_id);
 
-				<?php
+							if($result === FALSE){
+								echo "<td colspan='8'>No data found.</td>";
+							}else{
+								foreach($result as $key => $row){
+									$booking_id = $row['booking_id'];
+									echo"<tr>";
+									echo"<td>". $row['room_title']."</td>";
+									echo"<td>". $row['room_price']."</td>";
+									echo"<td>". $row['number_of_guests']."</td>";
+									echo"<td>". $row['stert_datetime']."</td>";
+									echo"<td>". $row['end_datetime']."</td>";
+									echo"<td>". $row['city_name']."</td>";
 
-                    $result = $countries->getCountries();
+									echo"<td>
+									<a href='userLogin.php?booking_id=$booking_id' class='btn btn-info'>Booking</a>
+									<a href='editbooking.php?booking_id=$booking_id' class='btn btn-info'>Edit</a>
+									<a href='deletebooking.php?booking_id=$booking_id' class='btn btn-danger'>Delete</a>
 
-                    if($result === FALSE){
-                        echo "<td colspan='8'>No data found.</td>";
-                    }else{
-                        foreach($result as $key => $row){
-                            $countries_id = $row['countries_id'];
-                            echo"<tr>";
-                            echo"<td>". $row['countries_id']."</td>";
-                            echo"<td>". $row['countries_name']."</td>";
+									</td>";
+									echo"</tr>";
+									}
+							}
+						?>
 
-                            echo"<td>
-                            <a href='editCountries.php?countries_id=$countries_id' class='btn btn-info'>Edit</a>
-                            <a href='deleteCountries.php?countries_id=$countries_id' class='btn btn-danger'>Delete</a>
 
-                            </td>";
-                            echo"</tr>";
-                            }
-                    }
-                ?>
 					</tbody>
 
 
@@ -132,7 +144,7 @@ $countries = new Countries;
 				<div class="col-md">
 					<div class="ftco-footer-widget mb-4">
 						<h2 class="ftco-heading-2">dirEngine</h2>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+						<p>Far far away, behind the word mountains, far from the room Vokalia and Consonantia,
 							there live the blind texts.</p>
 						<ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
 							<li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>

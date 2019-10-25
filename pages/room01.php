@@ -1,8 +1,26 @@
+
 <?php
+
 session_start();
+
 require_once("../classes/Rooms.php");
+require_once('../classes/City.php');
+
+
 
 $room = new Room;
+
+if(isset($_GET['city'])){
+
+	$city_id = $_GET['city'];
+
+	$result = $room->getRoomByCity($city_id);
+
+}else{
+
+	$result = $room->getRoom();
+
+}
 
 ?>
 
@@ -17,24 +35,24 @@ $room = new Room;
 	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Alex+Brush" rel="stylesheet">
 
-	<link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
-	<link rel="stylesheet" href="css/animate.css">
+	<link rel="stylesheet" href="../css/open-iconic-bootstrap.min.css">
+	<link rel="stylesheet" href="../css/animate.css">
 
-	<link rel="stylesheet" href="css/owl.carousel.min.css">
-	<link rel="stylesheet" href="css/owl.theme.default.min.css">
-	<link rel="stylesheet" href="css/magnific-popup.css">
+	<link rel="stylesheet" href="../css/owl.carousel.min.css">
+	<link rel="stylesheet" href="../css/owl.theme.default.min.css">
+	<link rel="stylesheet" href="../css/magnific-popup.css">
 
-	<link rel="stylesheet" href="css/aos.css">
+	<link rel="stylesheet" href="../css/aos.css">
 
-	<link rel="stylesheet" href="css/ionicons.min.css">
+	<link rel="stylesheet" href="../css/ionicons.min.css">
 
-	<link rel="stylesheet" href="css/bootstrap-datepicker.css">
-	<link rel="stylesheet" href="css/jquery.timepicker.css">
+	<link rel="stylesheet" href="../css/bootstrap-datepicker.css">
+	<link rel="stylesheet" href="../css/jquery.timepicker.css">
 
 
-	<link rel="stylesheet" href="css/flaticon.css">
-	<link rel="stylesheet" href="css/icomoon.css">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="../css/flaticon.css">
+	<link rel="stylesheet" href="../css/icomoon.css">
+	<link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
@@ -46,23 +64,17 @@ $room = new Room;
 				aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="oi oi-menu"></span> Menu
 			</button>
-
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-					<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-					<li class="nav-item"><a href="tour.html" class="nav-link">Tour</a></li>
-					<li class="nav-item active"><a href="hotel.html" class="nav-link">Hotels</a></li>
-					<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
-					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-					<li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
+					<li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
+					<li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
+					<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
-	<!-- END nav -->
 
-	<div class="hero-wrap js-fullheight" style="background-image: url('images/bg_5.jpg');">
+	<div class="hero-wrap js-fullheight" style="background-image: url('../images/bg_5.jpg');">
 		<div class="overlay"></div>
 		<div class="container">
 			<div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
@@ -75,8 +87,6 @@ $room = new Room;
 			</div>
 		</div>
 	</div>
-
-
 	<section class="ftco-section ftco-degree-bg">
 		<div class="container">
 			<div class="row">
@@ -114,7 +124,7 @@ $room = new Room;
 										</span>
 										<input value="1000" min="0" max="120000" step="500" type="range" />
 										<input value="50000" min="0" max="120000" step="500" type="range" />
-
+										</svg>
 									</div>
 								</div>
 								<div class="form-group">
@@ -169,63 +179,70 @@ $room = new Room;
 						</form>
 					</div>
 				</div>
-				<?php
+				<div class="col-lg-9">
+					<div class="row">
+						<?php
 
-			if(isset($_POST['message'])){
-				echo"<div class=alert=success'>".$_SESSION['message']."</div>";
-				unset($_SESSION['message']);
-			}
-			?>
+if(isset($_POST['message'])){
+	echo"<div class=alert=success'>".$_SESSION['message']."</div>";
+	unset($_SESSION['message']);
+}
+?>
 
-				<?php
-					$result = $room->getRoom();
+						<?php
 
-					if($result === FALSE){
-						echo "<td colspan='8'>No data found.</td>";
-					}else{
+		if($result === FALSE){
+			echo "<td colspan='8'>No data found.</td>";
+		}else{
 
-						foreach($result as $key => $row){
-							$room_id = $row['room_id'];
-							$image = $row['room_image'];
-							$room_capacity = $row['room_capacity'];
+			foreach($result as $key => $row){
+				$room_id = $row['room_id'];
+				$image = $row['room_image'];
+				$room_capacity = $row['room_capacity'];
 
+				?>
+						<div class='col-md-4 ftco-animate'>
+							<div class="card">
+								<div class="card-body">
+									<div class='destination'>
+										<img src='../uploads/<?php echo $image; ?>'
+											class='img img-2 img-fluid d-flex justify-content-center align-items-center'>
+										<div class='text p-3'>
+											<div class='d-flex'>
+												<div class='one'>
+												Capacity
+													<h3> <?php echo $room_capacity; ?> Pepole</h3>
 
-					echo "<div class='col-lg-9'>
-							<div class='row'>
-								<div class='col-md-4 ftco-animate'>
-											<div class='destination'>";
-												echo"<img src='../uploads/$image' class='img img-2 d-flex justify-content-center align-items-center'>";
+													<p class='rate'>
 
-													echo"<div>
-															<div class='text p-3'>
-																<div class='d-flex'>
-																	<div class='one'>
-																	<h3><a href='hotel-single.html'>$room_capacity</a></h3>";
-																	echo"<p class='rate'>
-																		".$row['city_name']."<span>8 Rating</span>
-																	</p>
-																	</div>";
-															echo"<div class='two'>
-																<span class='price per-price'>". $row['room_price']."<br><small>/night</small></span>
-															</div>
-														</div>
-													<p>Far far away, behind the word mountains, far from the countries</p>
-													<hr>
-													<p class='bottom-area d-flex'>
-														<span><i class='icon-map-o'></i> Miami, Fl</span> 
-														<span class='ml-auto'><a href='#'>Book Now</a></span>
+														<?php echo $row['city_name']; ?><span>8 Rating</span>
+
 													</p>
+												</div>
+												<div class='two'>
+													<span
+														class='price per-price'><?php echo $row['room_price']; ?> P<br><small>/night</small></span>
+												</div>
 											</div>
+											<p>Far far away, behind the word mountains, far from the countries</p>
+											<hr>
+											<p class='bottom-area d-flex'>
+												<a href='userLogin.php?room_id=<?php echo $room_id; ?>'class='btn btn-info btn-sm'>Booking</a>		
+												<a href='room-single.php?room_id=<?php echo $room_id; ?>' class='btn btn-info btn-sm'>Details</a>		
+											</p>
+										</div>
 									</div>
 								</div>
-							</div>";
-						?>
+							</div>>
+						</div>
+						<?php
+			}
+		}
+			?>
+					</div>
+				</div>
 			</div>
-		</div>
-
-
-	</section> <!-- .section -->
-
+	</section>
 	<footer class="ftco-footer ftco-bg-dark ftco-section">
 		<div class="container">
 			<div class="row mb-5">
@@ -275,8 +292,10 @@ $room = new Room;
 										View, San Francisco, California, USA</span></li>
 								<li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929
 											210</span></a></li>
-								<li><a href="#"><span class="icon icon-envelope"></span><span
-											class="text">info@yourdomain.com</span></a></li>
+								<li><a href="#"><span class="icon icon-envelope"></span><span class="text"><span
+												class="__cf_email__"
+												data-cfemail="e1888f878ea1988e9493858e8c80888fcf828e8c">[email&#160;protected]</span></span></a>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -284,14 +303,13 @@ $room = new Room;
 			</div>
 			<div class="row">
 				<div class="col-md-12 text-center">
-
 					<p>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;<script>
+						Copyright &copy;<script data-cfasync="false"
+							src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+						<script type="b1420ea39d7fe0924a95774b-text/javascript">
 							document.write(new Date().getFullYear());
 						</script> All rights reserved | This template is made with <i class="icon-heart"
 							aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 					</p>
 				</div>
 			</div>
@@ -307,24 +325,24 @@ $room = new Room;
 				stroke="#F96D00" /></svg></div>
 
 
-	<script src="js/jquery.min.js"></script>
-	<script src="js/jquery-migrate-3.0.1.min.js"></script>
-	<script src="js/popper.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.easing.1.3.js"></script>
-	<script src="js/jquery.waypoints.min.js"></script>
-	<script src="js/jquery.stellar.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/aos.js"></script>
-	<script src="js/jquery.animateNumber.min.js"></script>
-	<script src="js/bootstrap-datepicker.js"></script>
-	<script src="js/jquery.timepicker.min.js"></script>
-	<script src="js/scrollax.min.js"></script>
+	<script src="../js/jquery.min.js"></script>
+	<script src="../js/jquery-migrate-3.0.1.min.js"></script>
+	<script src="../js/popper.min.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/jquery.easing.1.3.js"></script>
+	<script src="../js/jquery.waypoints.min.js"></script>
+	<script src="../js/jquery.stellar.min.js"></script>
+	<script src="../js/owl.carousel.min.js"></script>
+	<script src="../js/jquery.magnific-popup.min.js"></script>
+	<script src="../js/aos.js"></script>
+	<script src="../js/jquery.animateNumber.min.js"></script>
+	<script src="../js/bootstrap-datepicker.js"></script>
+	<script src="../js/jquery.timepicker.min.js"></script>
+	<script src="../js/scrollax.min.js"></script>
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false">
 	</script>
-	<script src="js/google-map.js"></script>
-	<script src="js/main.js"></script>
+	<script src="../js/google-map.js"></script>
+	<script src="../js/main.js"></script>
 
 </body>
 

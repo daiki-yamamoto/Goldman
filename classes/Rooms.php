@@ -1,24 +1,30 @@
 <?php
 
 require_once("Config.php");
+
 class Room extends Config {
 
-    public function save($name,$countries,)
+    public function save($title,$roomcapacity,$roomprice,$userid,$cityid,$directory,$filename,$tmp_name)
 
     {
-        $sql ="INSERT INTO rooms(room_name,countries_id)
+        $sql ="INSERT INTO rooms(room_title,room_capacity,room_price,user_id,city_id,room_image)
 
-                VALUES('$name','$countries')";
+                VALUES('$title','$roomcapacity','$roomprice','$userid','$cityid','$filename')";
 
         $result = $this->conn->query($sql);
 
         if($result === TRUE){
 
-            $_SESSION['message'] = "room added successfully";
-            
-            header("Location: rooms.php");
+            if(move_uploaded_file($tmp_name,"../$directory".basename($filename))){
+
+                $_SESSION['message'] = "Employee added successfully";
+                
+                header("Location: home01.php");
+
+            }
             
         } else{
+
             echo $this->conn->error;
 
         }
@@ -26,8 +32,8 @@ class Room extends Config {
 
     public function getRoom()
     {
-        $sql = "SELECT * FROM rooms INNER JOIN countries ON rooms.countries_id=citys.city_id
-        INNER JOIN countries ON rooms.countries_id=countries.countries_id";
+        $sql = "SELECT * FROM rooms INNER JOIN users ON rooms.user_id=users.user_id
+                                    INNER JOIN citys ON rooms.city_id=citys.city_id";
         $result = $this->conn->query($sql);
 
         if($result->num_rows <= 0){ 
@@ -35,6 +41,7 @@ class Room extends Config {
             return false;
 
         }else{
+
             $rows = array();
 
             while($row = $result->fetch_assoc())
@@ -45,6 +52,32 @@ class Room extends Config {
             return $rows;
         }
     }
+
+    public function getRoomByCity($city_id)
+    {
+        $sql = "SELECT * FROM rooms 
+        INNER JOIN citys ON citys.city_id=rooms.city_id
+        WHERE rooms.city_id=$city_id";
+        $result = $this->conn->query($sql);
+
+        if($result->num_rows <= 0){ 
+
+            return false;
+
+        }else{
+
+            $rows = array();
+
+            while($row = $result->fetch_assoc())
+            {
+                $rows[] = $row;
+            }
+
+            return $rows;
+        }
+    }
+
+
 
     public function getSingleRoom($id)
     {
@@ -60,9 +93,9 @@ class Room extends Config {
         }
     }
 
-    public function updateRoom($id,$roomname)
+    public function updateRoom($id,$title,$roomcapacity,$roomprice,$userid,$cityid)
     {
-        $sql = "UPDATE rooms SET room_name='$roomname'
+        $sql = "UPDATE rooms SET room_title='$title',room_capacity='$roomcapacity',room_price='$roomprice',user_id='$userid',city_id='$cityid'
         WHERE room_id=$id";
 
         $result = $this->conn->query($sql);
@@ -71,7 +104,7 @@ class Room extends Config {
             echo $this->conn->error;
         }else{
             $_SESSION['message'] = "Room updated sucessfully.";
-            header("Location: room.php");
+            header("Location: rooms.php");
         }
 
     }
@@ -85,7 +118,7 @@ class Room extends Config {
             echo $this->conn->error;
         }else{
             $_SESSION['message'] = "Room updated sucessfully.";
-            header("Location: room.php");
+            header("Location: rooms.php");
         }
 
     }

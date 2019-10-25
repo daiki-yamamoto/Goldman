@@ -4,16 +4,18 @@ require_once("Config.php");
 class User extends Config {
 
     public function save($name,$email,$phonenumber,$password)
+
     {
+        $hash_password=md5($password);
         $sql ="INSERT INTO users(user_name,user_mail,user_phonenumber,user_password)
-                VALUES('$name','$email','$phonenumber','$password')";
+                VALUES('$name','$email','$phonenumber','$hash_password')";
 
         $result = $this->conn->query($sql);
 
         if($result === TRUE){
             $_SESSION['message'] = "User added successfully";
             
-            header("Location: users.php");
+            header("Location: home01.php");
             
         } else{
             echo $this->conn->error;

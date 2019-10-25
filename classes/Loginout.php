@@ -3,25 +3,37 @@
 require_once("Config.php");
 
 class Loginout extends Config{
-
-    public function owner($name,$password)
+    
+    public function loginUser($name,$password,$roomid)
     {
-        // encrypt the password
         $hash_password = md5($password);
-        $sql = "INSERT INTO users(user_name,user_password)
-         VALUES('$name','$hash_password')";
+        $sql = "SELECT * FROM users
+        WHERE user_name = '$name'
+        AND user_password = '$hash_password'";
         $result = $this->conn->query($sql);
 
-        if($result === TRUE){
-
-            header("Location: addRoom.php");
-
+        if($result->num_rows<= 0 )
+        {
+            return "Invalid Username or Password";
         }else{
-            
-            echo $this->conn->error;
-        }
+            // set the session value
 
+            $row = $result->fetch_assoc();
+            $_SESSION['user_id'] = $row['user_id'];
+
+            if($row['user_status'] === 'A'){
+
+                header("Location: addBooking.php?room_id=$roomid");
+
+            }elseif($row['user_status'] === 'U'){
+
+                header("Locarion: index.php");
+
+            }
+        }
     }
+
+
 
     public function login($name,$password)
     {
@@ -40,13 +52,13 @@ class Loginout extends Config{
             $row = $result->fetch_assoc();
             $_SESSION['user_id'] = $row['user_id'];
 
-            if($row['user_role'] === 'admin'){
+            if($row['user_status'] === 'A'){
 
-                header("Location: pages/index.php");
+                header("Location: addRoom.php");
 
-            }elseif($row['user_role'] === 'user'){
+            }elseif($row['user_status'] === 'U'){
 
-                header("Locarion: pages/index.php");
+                header("Locarion: addRoom.php");
 
             }
         }

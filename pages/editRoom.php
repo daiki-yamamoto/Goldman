@@ -1,17 +1,29 @@
 <?php
 
+require_once("../classes/Rooms.php");
+
+require_once("../classes/City.php");
+
 session_start();
-require_once("../classes/User.php");
-$user = new User;
 
-if (isset($_POST['addUser'])){
-    $name = $_POST['name'];
-    $email = $_POST['mail'];
-    $phonenumber = $_POST['phonenumber'];
-    $password = $_POST['password'];
+$id = $_GET['room_id'];
 
-    $user->save($name,$email,$phonenumber,$password);
+//create an object of class city
+$room = new Room;
+
+$get_room = $room->getSingleRoom($id);
+
+if(isset($_POST['updateRoom'])){
+  $title = $_POST['title'];
+  $roomcapacity = $_POST['roomcapacity'];
+  $roomprice = $_POST['roomprice'];
+  $userid = $_SESSION['user_id'];
+  $cityid = $_POST['cityid'];
+
+
+  $room->updateRoom($id,$title,$roomcapacity,$roomprice,$userid,$cityid);
 }
+// print_r($get_city);
 
 ?>
 
@@ -57,10 +69,13 @@ if (isset($_POST['addUser'])){
 
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-          <li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="addUser.php" class="nav-link"></a>Add User</li>
+          <li class="nav-item"><a href="tour.html" class="nav-link">Tour</a></li>
+          <li class="nav-item"><a href="hotel.html" class="nav-link">Hotels</a></li>
+          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+          <li class="nav-item active"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
         </ul>
       </div>
     </div>
@@ -69,54 +84,66 @@ if (isset($_POST['addUser'])){
     
     <div class="hero-wrap js-fullheight" style="background-image: url('../images/bg_2.jpg');">
       <div class="overlay"></div>
-      <div class="container">
-      <section class="ftco-section contact-section ftco-degree-bg">
-      <div class="container">
-        <div class="row d-flex mb-5 contact-info">
-          <div class="col-md-12 mb-4">
-            <h2 class="h4">Contact Information</h2>
-          </div>
-          <div class="w-100"></div>
-          <div class="col-md-3">
-            <p><span>Address:</span> 198 West 21th Street, Suite 721 New York NY 10016</p>
-          </div>
-          <div class="col-md-3">
-            <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
-          </div>
-          <div class="col-md-3">
-            <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
-          </div>
-            <div class="col-md-3">
-                <p><span>Website</span> <a href="#">yoursite.com</a></p>
-            </div>
-        </div>
-        <div class="row block-9">
-          <div class="col-md-6 pr-md-5">
-            <form action="#" method="post">
-              <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="Name">
-              </div>
-              <div class="form-group">
-                <input type="text" name="mail" class="form-control" placeholder="Email">
-              </div>
-              <div class="form-group">
-                <input type="text" name="phonenumber" class="form-control" placeholder="Phonenumber">
-              </div>
-              <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" name="addUser" value="submit" class="btn btn-primary form-control">
-              </div>
-            </form>
-          
-          </div>
+        <div class="container">
+            <section class="ftco-section contact-section ftco-degree-bg">
 
-          <div class="col-md-6" id="map"></div>
-        </div>
-      </div>
-    </section>
-          </div>
+            
+                <div class= "container mt-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <form method="post" action="">
+
+                                    <div class="form-group">
+                                        <label for="">title</label>
+                                        <input type="text" name="title" class="form-control" value="<?php echo $get_room['room_title'];?>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="">capacity</label>
+                                        <input type="text" name="roomcapacity" class="form-control" value="<?php echo $get_room['room_capacity'];?>">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="">roomprice</label>
+                                        <input type="text" name="roomprice" class="form-control" value="<?php echo $get_room['room_price'];?>">
+                                    </div>
+
+                                    <div class="form-group">
+
+                                    <label>City</label>
+                                      <select type="text" name="cityid" class="form-control">
+                                      <?php
+                                        $city = new City;
+                                        $result = $city->getCity();
+                                        foreach($result as $key => $row){
+                                            $city_id = $row['city_id'];
+                                            $countries_name= $row['countries_name']; 
+                                            $city_name = $row['city_name'];
+
+                                            // if($get_room['city_id'] == $row['city_id']){
+                                            //   $select = "selected";
+                                            // } else {
+                                            //   $select = NULL;
+                                            // }
+
+                                            $select = $get_room['city_id'] == $row['city_id'] ? "selected" : "";
+                                            
+                                            echo "<option value='$city_id' $select>$city_name, $countries_name</option>";
+                                        }
+                                      ?>
+                                      </select>
+                                    </div>
+
+
+                                    <button type="submit" name="updateRoom" class="btn btn-primary">Update Room</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+             </section>       
+          </div>    
         </div>
       </div>
     </div>
@@ -130,7 +157,7 @@ if (isset($_POST['addUser'])){
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2">dirEngine</h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <p>Far far away, behind the word mountains, far from the room Vokalia and Consonantia, there live the blind texts.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>

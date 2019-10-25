@@ -1,8 +1,8 @@
 <?php
 session_start();
-require_once("../classes/Countries.php");
+require_once("../classes/Rooms.php");
 
-$countries = new Countries;
+$room = new Room;
 
 ?>
 
@@ -50,10 +50,13 @@ $countries = new Countries;
 
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-					<li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-					<li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-					<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
+					<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+					<li class="nav-item"><a href="addUser.php" class="nav-link">Add User</a></li>
+					<li class="nav-item active"><a href="tour.html" class="nav-link">Tour</a></li>
+					<li class="nav-item"><a href="hotel.html" class="nav-link">Hotels</a></li>
+					<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+					<li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -80,37 +83,55 @@ $countries = new Countries;
 
 					<table class="table table-striped">
 						<thead>
+							<th>Image</th>
 							<th>ID</th>
-							<th>CountriesName</th>
+							<th>Title</th>
+							<th>Capacity</th>
+							<th>Price</th>
+						
+							<th>CityName</th>
 
 						</thead>
 
 					<tbody>
+					<div class="col-lg-9">
+						<?php
+							$result = $room->getRoom();
+
+							if($result === FALSE){
+								echo "<td colspan='8'>No data found.</td>";
+							}else{
+								foreach($result as $key => $row){
+									$room_id = $row['room_id'];
+									$image = $row['room_image'];
+									echo"<div class='row'>
+
+										<div class='col-md-4 ftco-animate'>";
+											echo"<td><img src='../uploads/$image' class='img img-2 d-flex justify-content-center align-items-center'></td>";
+
+											echo"<td>". $row['room_id']."</td>";
+											echo"<td>". $row['room_title']."</td>";
+											echo"<td>". $row['room_capacity']."</td>";
+											echo"<td>". $row['room_price']."</td>";
+											echo"<td>". $row['city_name']."</td>";
+
+											echo"<td>
+											<a href='userLogin.php?room_id=$room_id' class='btn btn-info'>Booking</a>
+											<a href='editroom.php?room_id=$room_id' class='btn btn-info'>Edit</a>
+											<a href='deleteRoom.php?room_id=$room_id' class='btn btn-danger'>Delete</a>
+
+											</td>";
+											echo"</tr>";
+											echo"
+										</div>
+									</div>";
+									}
+							}
+						?>
 
 
-				<?php
-
-                    $result = $countries->getCountries();
-
-                    if($result === FALSE){
-                        echo "<td colspan='8'>No data found.</td>";
-                    }else{
-                        foreach($result as $key => $row){
-                            $countries_id = $row['countries_id'];
-                            echo"<tr>";
-                            echo"<td>". $row['countries_id']."</td>";
-                            echo"<td>". $row['countries_name']."</td>";
-
-                            echo"<td>
-                            <a href='editCountries.php?countries_id=$countries_id' class='btn btn-info'>Edit</a>
-                            <a href='deleteCountries.php?countries_id=$countries_id' class='btn btn-danger'>Delete</a>
-
-                            </td>";
-                            echo"</tr>";
-                            }
-                    }
-                ?>
 					</tbody>
+					</div>
 
 
 
@@ -132,7 +153,7 @@ $countries = new Countries;
 				<div class="col-md">
 					<div class="ftco-footer-widget mb-4">
 						<h2 class="ftco-heading-2">dirEngine</h2>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+						<p>Far far away, behind the word mountains, far from the room Vokalia and Consonantia,
 							there live the blind texts.</p>
 						<ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
 							<li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>

@@ -1,31 +1,12 @@
-<?php
-
-session_start();
-require_once("../classes/User.php");
-$user = new User;
-
-if (isset($_POST['addUser'])){
-    $name = $_POST['name'];
-    $email = $_POST['mail'];
-    $phonenumber = $_POST['phonenumber'];
-    $password = $_POST['password'];
-
-    $user->save($name,$email,$phonenumber,$password);
-}
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <title>DirEngine - Free Bootstrap 4 Template by Colorlib</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/../css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Alex+Brush" rel="stylesheet">
-
 
     <link rel="stylesheet" href="../css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="../css/animate.css">
@@ -58,9 +39,9 @@ if (isset($_POST['addUser'])){
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-          <li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+					<li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
+					<li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
+					<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
         </ul>
       </div>
     </div>
@@ -70,7 +51,16 @@ if (isset($_POST['addUser'])){
     <div class="hero-wrap js-fullheight" style="background-image: url('../images/bg_2.jpg');">
       <div class="overlay"></div>
       <div class="container">
-      <section class="ftco-section contact-section ftco-degree-bg">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center" data-scrollax-parent="true">
+          <div class="col-md-9 ftco-animate text-center" data-scrollax=" properties: { translateY: '70%' }">
+            <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span class="mr-2"><a href="index.html">Home</a></span> <span>Contact</span></p>
+            <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Contact Us</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+		<section class="ftco-section contact-section ftco-degree-bg">
       <div class="container">
         <div class="row d-flex mb-5 contact-info">
           <div class="col-md-12 mb-4">
@@ -86,27 +76,27 @@ if (isset($_POST['addUser'])){
           <div class="col-md-3">
             <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
           </div>
-            <div class="col-md-3">
-                <p><span>Website</span> <a href="#">yoursite.com</a></p>
-            </div>
+          <div class="col-md-3">
+            <p><span>Website</span> <a href="#">yoursite.com</a></p>
+          </div>
         </div>
         <div class="row block-9">
           <div class="col-md-6 pr-md-5">
-            <form action="#" method="post">
+            <form action="#">
               <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="Name">
+                <input type="text" class="form-control" placeholder="Your Name">
               </div>
               <div class="form-group">
-                <input type="text" name="mail" class="form-control" placeholder="Email">
+                <input type="text" class="form-control" placeholder="Your Email">
               </div>
               <div class="form-group">
-                <input type="text" name="phonenumber" class="form-control" placeholder="Phonenumber">
+                <input type="text" class="form-control" placeholder="Subject">
               </div>
               <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password"></textarea>
+                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
               </div>
               <div class="form-group">
-                <input type="submit" name="addUser" value="submit" class="btn btn-primary form-control">
+                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
               </div>
             </form>
           
@@ -116,12 +106,6 @@ if (isset($_POST['addUser'])){
         </div>
       </div>
     </section>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
 
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">
@@ -210,15 +194,6 @@ if (isset($_POST['addUser'])){
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="../js/google-map.js"></script>
   <script src="../js/main.js"></script>
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
-    </script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
-    </script>
     
   </body>
 </html>

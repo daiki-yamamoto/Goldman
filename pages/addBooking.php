@@ -1,16 +1,23 @@
 <?php
 
 session_start();
-require_once("../classes/User.php");
-$user = new User;
+require_once("../classes/Rooms.php");
+require_once("../classes/Bookings.php");
 
-if (isset($_POST['addUser'])){
-    $name = $_POST['name'];
-    $email = $_POST['mail'];
-    $phonenumber = $_POST['phonenumber'];
-    $password = $_POST['password'];
+$booking = new Booking;
+// SESSION is all page know who is user
+// GET is only next page bring room_id
+$userid = $_SESSION['user_id'];
+$roomid = $_GET['room_id'];
+if (isset($_POST['addBooking'])){
+    $stertdate = $_POST['stertdate'];
+    $enddate = $_POST['enddate'];
+    $numberofguests = $_POST['numberofguests'];
+    $paymethod = $_POST['paymethod'];
+    $cardnumber = $_POST['cardnumber'];
+    
 
-    $user->save($name,$email,$phonenumber,$password);
+    $booking->saveBooking($stertdate,$enddate,$numberofguests,$userid,$roomid,$paymethod,$cardnumber);
 }
 
 ?>
@@ -57,10 +64,13 @@ if (isset($_POST['addUser'])){
 
       <div class="collapse navbar-collapse" id="ftco-nav">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-          <li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-          <li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-          <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+          <li class="nav-item"><a href="addUser.php" class="nav-link">Add User</a></li>
+          <li class="nav-item"><a href="tour.html" class="nav-link">Tour</a></li>
+          <li class="nav-item"><a href="hotel.html" class="nav-link">Hotels</a></li>
+          <li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+          <li class="nav-item active"><a href="contact.html" class="nav-link">Contact</a></li>
+          <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
         </ul>
       </div>
     </div>
@@ -86,33 +96,66 @@ if (isset($_POST['addUser'])){
           <div class="col-md-3">
             <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
           </div>
-            <div class="col-md-3">
-                <p><span>Website</span> <a href="#">yoursite.com</a></p>
-            </div>
-        </div>
-        <div class="row block-9">
-          <div class="col-md-6 pr-md-5">
-            <form action="#" method="post">
-              <div class="form-group">
-                <input type="text" name="name" class="form-control" placeholder="Name">
-              </div>
-              <div class="form-group">
-                <input type="text" name="mail" class="form-control" placeholder="Email">
-              </div>
-              <div class="form-group">
-                <input type="text" name="phonenumber" class="form-control" placeholder="Phonenumber">
-              </div>
-              <div class="form-group">
-                <input type="password" name="password" class="form-control" placeholder="Password"></textarea>
-              </div>
-              <div class="form-group">
-                <input type="submit" name="addUser" value="submit" class="btn btn-primary form-control">
-              </div>
-            </form>
-          
+          <div class="col-md-3">
+            <p><span>Website</span> <a href="#">yoursite.com</a></p>
           </div>
+        </div>
+        <div class="">
+          <div class="">
+            <form action="#" method="post">
 
-          <div class="col-md-6" id="map"></div>
+              <div class="form-group">
+                <input type="date" name="stertdate" class="form-control" placeholder="Stertdate">
+              </div>
+
+              <div class="form-group">
+                <input type="date" name="enddate" class="form-control" placeholder="Enddate">
+              </div>
+
+              <div class="form-group">
+                <select type="text" name="numberofguests" class="form-control" placeholder="Number of guests">
+                  <option value="">Choose Number Of Guests</option>
+                  <option value="0">1</option>
+                  <option value="1">2</option>
+                  <option value="2">3</option>
+                  <option value="3">4</option>
+                  <option value="4">5</option>
+                  <option value="5">6</option>
+                  <option value="6">7</option>
+                  <option value="7">8</option>
+                  <option value="8">9</option>
+                  <option value="9">10</option>
+                  <option value="10">11</option>
+                  <option value="11">12</option>
+                  <option value="12">13</option>
+                  <option value="13">14</option>
+                  <option value="14">15</option>
+                  <option value="15">16+</option>
+                </select>
+                </div>
+
+              <div class="form-group">
+              <select type="text" name="paymethod" class="form-control" placeholder="Roomcapacity">
+                  <option value="">Choose Room Kind of Card</option>
+                  <option value="visa">VISA</option>
+                  <option value="mastercard">MasterCard</option>
+                  <option value="jcb">JCB</option>
+                  <option value="american express">American Express</option>
+                  <option value="ciners club">Diners Club</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <input type="text" name="cardnumber" class="form-control" placeholder="Card Number">
+              </div>
+
+              <div class="form-group">
+                <input type="submit" name="addBooking" value="submit" class="btn btn-primary form-control">
+              </div>
+
+
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -130,7 +173,7 @@ if (isset($_POST['addUser'])){
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
               <h2 class="ftco-heading-2">dirEngine</h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+              <p>Far far away, behind the word mountains, far from the city Vokalia and Consonantia, there live the blind texts.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                 <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>

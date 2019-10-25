@@ -1,8 +1,10 @@
 <?php
 session_start();
-require_once("../classes/Countries.php");
+require_once("../classes/Rooms.php");
 
-$countries = new Countries;
+$city_id = $_GET['city'];
+$room = new Room;
+$result = $room->getRoomByCity($city_id);
 
 ?>
 
@@ -23,11 +25,11 @@ $countries = new Countries;
 
 	<link rel="stylesheet" href="../css/owl.carousel.min.css">
 	<link rel="stylesheet" href="../css/owl.theme.default.min.css">
-	<link rel="stylesheet" href="../css/magnific-popup.css">
+	<link rel="stylesheet" href="../css/magnific-popup.css">																																								
 
-	<link rel="stylesheet" href="../css/aos.css">
+	<link rel="stylesheet" href="../css/aos.css">																	
 
-	<link rel="stylesheet" href="../css/ionicons.min.css">
+	<link rel="stylesheet" href="../css/ionicons.min.css">																																																																																																							
 
 	<link rel="stylesheet" href="../css/bootstrap-datepicker.css">
 	<link rel="stylesheet" href="../css/jquery.timepicker.css">
@@ -50,10 +52,13 @@ $countries = new Countries;
 
 			<div class="collapse navbar-collapse" id="ftco-nav">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item"><a href="home01.php" class="nav-link">Home</a></li>
-					<li class="nav-item"><a href="ownerLogin.php" class="nav-link">Room Owner</a></li>
-					<li class="nav-item"><a href="userLogin.php" class="nav-link">User</a></li>
-					<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
+					<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+					<li class="nav-item"><a href="addUser.php" class="nav-link">Add User</a></li>
+					<li class="nav-item active"><a href="tour.html" class="nav-link">Tour</a></li>
+					<li class="nav-item"><a href="hotel.html" class="nav-link">Hotels</a></li>
+					<li class="nav-item"><a href="blog.html" class="nav-link">Blog</a></li>
+					<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+					<li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
 				</ul>
 			</div>
 		</div>
@@ -81,35 +86,43 @@ $countries = new Countries;
 					<table class="table table-striped">
 						<thead>
 							<th>ID</th>
-							<th>CountriesName</th>
+							<th>Title</th>
+							<th>Capacity</th>
+							<th>Price</th>
+						
+							<th>CityName</th>
 
 						</thead>
 
 					<tbody>
 
+						<?php
+							
 
-				<?php
+							if($result === FALSE){
+								echo "<td colspan='8'>No data found.</td>";
+							}else{
+								foreach($result as $key => $row){
+									$room_id = $row['room_id'];
+									echo"<tr>";
+									echo"<td>". $row['room_id']."</td>";
+									echo"<td>". $row['room_title']."</td>";
+									echo"<td>". $row['room_capacity']."</td>";
+									echo"<td>". $row['room_price']."</td>";
+									echo"<td>". $row['city_name']."</td>";
 
-                    $result = $countries->getCountries();
+									echo"<td>
+									<a href='userLogin.php?room_id=$room_id' class='btn btn-info'>Booking</a>
+									<a href='editroom.php?room_id=$room_id' class='btn btn-info'>Edit</a>
+									<a href='deleteRoom.php?room_id=$room_id' class='btn btn-danger'>Delete</a>
 
-                    if($result === FALSE){
-                        echo "<td colspan='8'>No data found.</td>";
-                    }else{
-                        foreach($result as $key => $row){
-                            $countries_id = $row['countries_id'];
-                            echo"<tr>";
-                            echo"<td>". $row['countries_id']."</td>";
-                            echo"<td>". $row['countries_name']."</td>";
+									</td>";
+									echo"</tr>";
+									}
+							}
+						?>
 
-                            echo"<td>
-                            <a href='editCountries.php?countries_id=$countries_id' class='btn btn-info'>Edit</a>
-                            <a href='deleteCountries.php?countries_id=$countries_id' class='btn btn-danger'>Delete</a>
 
-                            </td>";
-                            echo"</tr>";
-                            }
-                    }
-                ?>
 					</tbody>
 
 
@@ -132,7 +145,7 @@ $countries = new Countries;
 				<div class="col-md">
 					<div class="ftco-footer-widget mb-4">
 						<h2 class="ftco-heading-2">dirEngine</h2>
-						<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia,
+						<p>Far far away, behind the word mountains, far from the room Vokalia and Consonantia,
 							there live the blind texts.</p>
 						<ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
 							<li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
